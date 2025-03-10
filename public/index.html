@@ -8,14 +8,56 @@
 </head>
 
 <body>
+    <h1>Lista de Vinos</h1>
+    <div id="vinoContainer">
+
+    </div>
+
     <script>
+
         fetch('/vinos')
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-        })
-        .catch(error => console.log(error))
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => console.log(error))
+
+                const vinoContainer = document.getElementById("vinoContainer");
+
+                //crear elemento para cada vino
+                data.forEach(vino => {
+                    const vinoDiv = document.createElement("div");
+                    vinoDiv.classList.add("vino");
+
+                    //Nombre
+                    const nombre = data.nombre;
+                    const h1 = document.createElement("h1");
+                    h1.innerText = nombre;
+                    document.body.appendChild(h1);
+
+                    //Año
+                    const año = document.createElement("p");
+                    const añoText = data.año
+                    año.innerText = añoText;
+                    vinoDiv.appendChild(año);
+
+                    //Tipo
+                    const tipo = document.createElement("p");
+                    const tipoText= data.tipo
+                    tipo.innerText = tipoText;
+                    vinoDiv.appendChild(tipo);
+
+                    //Precio
+                    const precio = document.createElement("p");
+                    const precioText = data.precio
+                    precio.innerText = data.precio;
+                    vinoDiv.appendChild(precio);
+
+                    //meter los vinos al contendor
+                    vinoContainer.appendChild(vinoDiv);
+                });
+            
+
     </script>
-</body>
 
 </html>
