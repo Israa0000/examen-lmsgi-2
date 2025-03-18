@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vino Detalles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .vino-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: 20px auto;
+        }
+
+        .vino-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .vino-card h2 {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+
+        .vino-card p {
+            font-size: 1em;
+            margin: 5px 0;
+        }
+
+        .cata {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .cata h3 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+
+        .cata p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Detalles del Vino</h1>
+    <div id="vinoContainer"></div>
+    <div id="cataContainer"></div>
+
+    <script>
+        const vinoId = window.location.search.split('=')[1]; 
+
+        fetch(`/vinos/${vinoId}`)
+            .then(response => response.json())
+            .then(vino => {
+                const vinoContainer = document.getElementById("vinoContainer");
+
+                // Crear tarjeta de vino
+                const vinoDiv = document.createElement("div");
+                vinoDiv.classList.add("vino-card");
+
+                // Imagen del vino
+                const img = document.createElement("img");
+                img.src = `/images/wine_${vino.id}.png`;
+                vinoDiv.appendChild(img);
+
+                // Nombre
+                const nombre = document.createElement("h2");
+                nombre.innerText = vino.nombre;
+                vinoDiv.appendChild(nombre);
+
+                // Año
+                const año = document.createElement("p");
+                año.innerText = `Año: ${vino.año}`;
+                vinoDiv.appendChild(año);
+
+                // Tipo
+                const tipo = document.createElement("p");
+                tipo.innerText = `Tipo: ${vino.tipo}`;
+                vinoDiv.appendChild(tipo);
+
+                // Precio
+                const precio = document.createElement("p");
+                precio.innerText = `Precio: $${vino.precio}`;
+                vinoDiv.appendChild(precio);
+
+                // Stock
+                const stock = document.createElement("p");
+                stock.innerText = `Stock: ${vino.stock}`;
+                vinoDiv.appendChild(stock);
+
+                // Añadir el vino al contenedor
+                vinoContainer.appendChild(vinoDiv);
+            })
+            .catch(error => console.log('Error al obtener el vino:', error));
+
+        fetch('/cata')
+            .then(response => response.json())
+            .then(catas => {
+                const cataContainer = document.getElementById("cataContainer");
+
+                const catasVino = catas.filter(cata => cata.vinoId === parseInt(vinoId));
+
+                catasVino.forEach(cata => {
+                    const cataDiv = document.createElement("div");
+                    cataDiv.classList.add("cata");
+
+                    const cataTitulo = document.createElement("h3");
+                    cataTitulo.innerText = `Cata de ${cata.tiempo}`;
+                    cataDiv.appendChild(cataTitulo);
+
+                    const cataValor = document.createElement("p");
+                    cataValor.innerText = `Valor: ${cata.valor}`;
+                    cataDiv.appendChild(cataValor);
+
+                    cataContainer.appendChild(cataDiv);
+                });
+            })
+            .catch(error => console.log('Error al obtener las catas:', error));
+    </script>
+</body>
+
+</html>

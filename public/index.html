@@ -1,63 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ejemplo</title>
+    <title>Vinos de la Bodega</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .vino-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px;
+            display: inline-block;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .vino-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .vino-card h2 {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+
+        .vino-card p {
+            font-size: 1em;
+            margin: 5px 0;
+        }
+    </style>
 </head>
 
 <body>
     <h1>Lista de Vinos</h1>
-    <div id="vinoContainer">
-
-    </div>
+    <div id="vinoContainer"></div>
 
     <script>
-
         fetch('/vinos')
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                })
-                .catch(error => console.log(error))
-
+            .then(response => response.json())
+            .then(data => {
                 const vinoContainer = document.getElementById("vinoContainer");
 
-                //crear elemento para cada vino
                 data.forEach(vino => {
                     const vinoDiv = document.createElement("div");
-                    vinoDiv.classList.add("vino");
+                    vinoDiv.classList.add("vino-card");
 
-                    //Nombre
-                    const nombre = data.nombre;
-                    const h1 = document.createElement("h1");
-                    h1.innerText = nombre;
+                    // Imagen del vino (se usa la imagen generada por p5.js)
+                    const img = document.createElement("img");
+                    img.src = `/images/wine_${vino.id}.png`;
+                    vinoDiv.appendChild(img);
+
+                    // Nombre
+                    const nombre = document.createElement("h2");
+                    nombre.innerText = vino.nombre;
                     vinoDiv.appendChild(nombre);
 
-                    //Año
+                    // Año
                     const año = document.createElement("p");
-                    const añoText = data.año
-                    año.innerText = añoText;
+                    año.innerText = `Año: ${vino.anio}`;
                     vinoDiv.appendChild(año);
 
-                    //Tipo
+                    // Tipo
                     const tipo = document.createElement("p");
-                    const tipoText= data.tipo
-                    tipo.innerText = tipoText;
+                    tipo.innerText = `Tipo: ${vino.tipo}`;
                     vinoDiv.appendChild(tipo);
 
-                    //Precio
+                    // Precio
                     const precio = document.createElement("p");
-                    const precioText = data.precio
-                    precio.innerText = data.precio;
+                    precio.innerText = `Precio: $${vino.precio}`;
                     vinoDiv.appendChild(precio);
 
-                    //meter los vinos al contendor
+                    // Añadir el vino al contenedor
                     vinoContainer.appendChild(vinoDiv);
                 });
-            
-
+            })
+            .catch(error => console.log('Error al obtener los vinos:', error));
     </script>
+
+</body>
 
 </html>
